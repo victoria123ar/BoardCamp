@@ -5,7 +5,7 @@ export async function listGames(req, res){
     const games = await connection.query(
               "SELECT * FROM games;",
       );
-
+      console.log(games)
       return res.status(200).send(games.rows);
     }
   catch (error) {

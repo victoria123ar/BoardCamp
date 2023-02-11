@@ -25,7 +25,7 @@ export async function fetchCustomer(req, res){
       return res.sendStatus(404);
     }
 
-    res.send(rows[0]);
+    res.status(200).send(rows[0]);
   } catch (err) {
     res.status(500).send(err.message);
   }
