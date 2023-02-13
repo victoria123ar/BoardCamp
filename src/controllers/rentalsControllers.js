@@ -71,9 +71,10 @@ export async function finalizeRent(req, res) {
   const { id } = req.params;
 
   try {
-    const result = await connection.query("SELECT * FROM rentals WHERE id=$1;", [
-      id,
-    ]);
+    const result = await connection.query(
+      "SELECT * FROM rentals WHERE id=$1;",
+      [id]
+    );
 
     const rental = result.rows[0];
     if (result.rowCount === 0) return res.sendStatus(404);
@@ -104,9 +105,10 @@ export async function deleteRent(req, res) {
   const { id } = req.params;
 
   try {
-    const result = await connection.query("SELECT * FROM rentals WHERE id=$1;", [
-      id,
-    ]);
+    const result = await connection.query(
+      "SELECT * FROM rentals WHERE id=$1;",
+      [id]
+    );
 
     const rental = result.rows[0];
 

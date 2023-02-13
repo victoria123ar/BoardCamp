@@ -5,9 +5,7 @@ export async function validateRentals(req, res, next) {
   const { customerId, gameId, daysRented } = req.body;
 
   try {
-
-    if(typeof gameId != 'number')
-    {
+    if (typeof gameId != "number" || gameId < 0) {
       return res.sendStatus(400);
     }
     const game = await connection.query("SELECT * FROM games WHERE id=$1", [
@@ -28,15 +26,13 @@ export async function validateRentals(req, res, next) {
       originalPrice: daysRented * game.rows[0].pricePerDay,
       delayFee: null,
     };
-    
 
     const { error } = rentalsSchemma.validate(rental, { abortEarly: false });
-    if (error) 
-    {
+    if (error) {
       const errors = error.details.map((detail) => detail.message);
       return res.status(400).send({ errors });
     }
-    
+
     const existsCustomerId = await connection.query(
       "SELECT * FROM customers WHERE id=$1",
       [customerId]
