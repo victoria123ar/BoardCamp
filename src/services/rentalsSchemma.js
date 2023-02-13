@@ -8,4 +8,4 @@ export const rentalsSchemma = joi.object({
   returnDate: joi.date().allow(null),
   originalPrice: joi.number().required(),
   delayFee: joi.number().allow(null),
-});
+  });

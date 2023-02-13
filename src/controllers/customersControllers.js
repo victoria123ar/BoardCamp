@@ -18,7 +18,7 @@ export async function fetchCustomer(req, res) {
       [id]
     );
 
-    if (rows.length <= 0) {
+    if (rows.length === 0) {
       return res.sendStatus(404);
     }
 

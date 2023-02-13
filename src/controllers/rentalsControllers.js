@@ -5,10 +5,8 @@ export async function listRentals(req, res) {
 
   const queryGlobal = `
             SELECT rentals.*,
-                customers.id AS "customerId", 
-                customers.name AS "customerName", 
-                games.id AS "gameId", 
-                games.name AS "gameName"
+            json_build_object('id', customers.id, 'name', customers.name) AS customer,
+            json_build_object('id', games.id, 'name', games.name) AS game
             FROM rentals
                 JOIN customers ON customers.id = rentals."customerId"
                 JOIN games ON games.id = rentals."gameId";`;
@@ -71,18 +69,14 @@ export async function insertRent(req, res) {
 
 export async function finalizeRent(req, res) {
   const { id } = req.params;
-  console.log(id)
 
   try {
     const result = await connection.query("SELECT * FROM rentals WHERE id=$1;", [
       id,
     ]);
-    console.log(result)
 
     const rental = result.rows[0];
-    console.log(rental)
     if (result.rowCount === 0) return res.sendStatus(404);
-    console.log(rental)
     if (rental.returnDate) return res.sendStatus(400);
 
     const diffInTime =

@@ -10,6 +10,8 @@ export const customersSchemma = joi.object({
     .required(),
   cpf: joi
     .string()
+    .min(11)
+    .max(11)
     .regex(/[0-9]{11}/)
     .required(),
   birthday: joi

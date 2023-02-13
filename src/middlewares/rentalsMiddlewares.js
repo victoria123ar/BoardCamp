@@ -5,14 +5,20 @@ export async function validateRentals(req, res, next) {
   const { customerId, gameId, daysRented } = req.body;
 
   try {
+
+    if(typeof gameId != 'number')
+    {
+      return res.sendStatus(400);
+    }
     const game = await connection.query("SELECT * FROM games WHERE id=$1", [
       gameId,
     ]);
 
     if (game.rowCount === 0) {
-      return res.sendStatus(400);
+      return res.sendStatus(404);
     }
 
+    const price = daysRented * game.rows[0].pricePerDay;
     const rental = {
       customerId,
       gameId,
@@ -22,21 +28,22 @@ export async function validateRentals(req, res, next) {
       originalPrice: daysRented * game.rows[0].pricePerDay,
       delayFee: null,
     };
+    
 
     const { error } = rentalsSchemma.validate(rental, { abortEarly: false });
-
-    if (error) {
+    if (error) 
+    {
       const errors = error.details.map((detail) => detail.message);
       return res.status(400).send({ errors });
     }
-
+    
     const existsCustomerId = await connection.query(
       "SELECT * FROM customers WHERE id=$1",
       [customerId]
     );
 
     if (existsCustomerId.rowCount === 0) {
-      return res.sendStatus(400);
+      return res.sendStatus(404);
     }
 
     res.locals.rental = rental;
@@ -55,8 +62,6 @@ export async function gamesStock(req, res, next) {
       `SELECT * FROM rentals WHERE "gameId"=$1`,
       [game.rows[0].id]
     );
-
-    console.log(rentals.rows.length);
 
     if (rentals.rows.length > game.rows[0].stockTotal) {
       return res.sendStatus(400);
