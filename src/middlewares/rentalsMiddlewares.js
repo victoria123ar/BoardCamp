@@ -5,7 +5,7 @@ export async function validateRentals(req, res, next) {
   const { customerId, gameId, daysRented } = req.body;
 
   try {
-    if (typeof gameId != "number" || gameId < 0) {
+    if (typeof gameId != "number" || gameId <= 0) {
       return res.sendStatus(400);
     }
     const game = await connection.query("SELECT * FROM games WHERE id=$1", [
