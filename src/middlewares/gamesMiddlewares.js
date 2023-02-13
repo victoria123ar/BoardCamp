@@ -19,6 +19,9 @@ export async function validateGames(req, res, next) {
   if (existsGame.rowCount !== 0) {
     return res.status(409).send("Jogo já existe");
   }
+  if (game.stockTotal <= 0) {
+    return res.sendStatus(400);
+  }
 
   res.locals.game = game;
 
